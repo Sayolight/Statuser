@@ -7,7 +7,8 @@ Set your status to telegram user avatar
 * Enter to .env file your *api_id* and *hash_id* ([Find it here](https://my.telegram.org/))
 * Login to Telegram in **main.py**
 * Get JsonStorage token in **main.py** and write it to .env file
-* To change status - write to Saved Messages: "$statuser *avatar*" or use PUT Request to JsonStorage
+* To update your avatar without status - write to Saved Messages: "$upd" 
+* To change status - write to Saved Messages: "$s *avatar*" or use PUT Request to JsonStorage
 
 # PUT Requests
 Data: {'status': '*statusname*'}
