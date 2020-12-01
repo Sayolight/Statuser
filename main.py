@@ -12,6 +12,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+print('Sayo.Statuser by Sayolight')
+
 api_id = int(os.getenv('API_ID'))
 api_hash = os.getenv('API_HASH')
 strg = os.getenv('JSON_STORAGE')
@@ -48,28 +50,31 @@ with TelegramClient('user', api_id, api_hash) as client:
         ))
 
     while True:
-        for message in client.get_messages('me', limit=1):
-            msg = message.message.split()
+        try:
+            for message in client.get_messages('me', limit=1):
+                msg = message.message.split()
 
-            if strg:
-                response = requests.get(f'https://jsonstorage.net/api/items/{strg}')
-                status = response.json()['status']
-                if status:
-                    update(status)
-                    newHeaders = {'Content-type': "application/json; charset=utf-8"}
+                if strg:
+                    response = requests.get(f'https://jsonstorage.net/api/items/{strg}')
+                    status = response.json()['status']
+                    if status:
+                        update(status)
+                        newHeaders = {'Content-type': "application/json; charset=utf-8"}
 
-                    response = requests.put(f'https://jsonstorage.net/api/items/{strg}',
-                                             data=json.dumps({'status': ''}),
-                                             headers=newHeaders)
+                        response = requests.put(f'https://jsonstorage.net/api/items/{strg}',
+                                                 data=json.dumps({'status': ''}),
+                                                 headers=newHeaders)
 
-            if msg[0] == "$upd":
-                client.download_profile_photo('me', "photo.png")
-                client.edit_message(message, 'Обновлено.')
+                if msg[0] == "$upd":
+                    client.download_profile_photo('me', "photo.png")
+                    client.edit_message(message, 'Обновлено.')
 
-            if msg[0] == "$s":
-                try:
-                    update(msg[1])
-                    message.delete()
-                except:
-                    client.edit_message(message, 'Произошла ошибка.')
-            time.sleep(10)
+                if msg[0] == "$s":
+                    try:
+                        update(msg[1])
+                        message.delete()
+                    except:
+                        client.edit_message(message, 'Произошла ошибка.')
+        except:
+            print('')
+        time.sleep(10)
