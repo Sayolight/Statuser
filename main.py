@@ -76,5 +76,5 @@ with TelegramClient('user', api_id, api_hash) as client:
                     except:
                         client.edit_message(message, 'Произошла ошибка.')
         except:
-            print('')
+            pass
         time.sleep(10)
