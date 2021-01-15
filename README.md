@@ -6,9 +6,10 @@ Set your status to telegram user avatar
 * Install *telethon*, *PIL*, *requests* and *dotenv* modules
 * Enter to .env file your *api_id* and *hash_id* ([Find it here](https://my.telegram.org/))
 * Login to Telegram in **main.py**
-* Get JsonStorage token in **main.py** and write it to .env file
-* To update your avatar without status - write to Saved Messages: "$upd" 
-* To change status - write to Saved Messages: "$s *avatar*" or use PUT Request to JsonStorage
+* Get jsonbox.io token in **main.py** and write it to .env file
+* Create telegram channel for statuser and enter if of this channel to .env file
+* To update your avatar without status - pin to created channel your image 
+* To change status - write to created channel: "s *avatar*" or use PUT Request to jsonbox.io
 
 # PUT Requests
 Data: {'status': '*statusname*'}
@@ -16,7 +17,7 @@ Data: {'status': '*statusname*'}
 Example: 
 ```
 $.ajax({
-    url:"https://jsonstorage.net/api/items/{id}",
+    url:"https://jsonbox.io/************************/***********************",
     type:"PUT",
     data:'{"status":"statusname"}',
     contentType:"application/json; charset=utf-8",
