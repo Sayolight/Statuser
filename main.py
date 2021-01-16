@@ -56,15 +56,31 @@ with TelegramClient('user', api_id, api_hash) as client:
     while True:
         try:
             if strg:
-                response = requests.get(f'{strg}')
-                status = response.json()['status']
-                if status and os.path.isfile(f'img/{status}.png'):
-                    update(status)
-                newHeaders = {'Content-type': "application/json; charset=utf-8"}
+                channel_entity = client.get_entity(PeerChannel(channel))
+                channel_info = client(GetFullChannelRequest(channel_entity))
+                pinned_msg_id = channel_info.full_chat.pinned_msg_id
 
-                response = requests.put(f'{strg}',
-                                        data=json.dumps({'status': ''}),
-                                        headers=newHeaders)
+                if pinned_msg_id is not None:
+                    posts = client(GetHistoryRequest(
+                        channel_entity,
+                        limit=1,
+                        offset_date=None,
+                        offset_id=pinned_msg_id + 1,
+                        max_id=0,
+                        min_id=0,
+                        add_offset=0,
+                        hash=0
+                    ))
+                    client.download_media(posts.messages[0], "photo.png")
+                    response = requests.get(f'{strg}')
+                    status = response.json()['status']
+                    if status and os.path.isfile(f'img/{status}.png'):
+                        update(status)
+                    newHeaders = {'Content-type': "application/json; charset=utf-8"}
+
+                    response = requests.put(f'{strg}',
+                                            data=json.dumps({'status': ''}),
+                                            headers=newHeaders)
 
             msgs = client.get_messages(channel, limit=1)
 
@@ -103,4 +119,4 @@ with TelegramClient('user', api_id, api_hash) as client:
                         client.edit_message(msgs[0], f'Can\'t find **{cmd[1]}.png**')
         except:
             pass
-        time.sleep(10)
+        time.sleep(int(os.getenv("UPD_TIMER")))
